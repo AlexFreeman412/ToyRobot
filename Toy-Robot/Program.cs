@@ -5,11 +5,16 @@ namespace ToyRobot
 {
     class Program
     {
+        
         public static Robot robot;
         private static bool exitNextLoop = false;
 
         static void Main()
         {
+            // Uncomment the following two lines to run test class.
+            //Testing test = new Testing();
+            //exitNextLoop = true;
+
             while (!exitNextLoop)
             { 
                 Console.WriteLine("Type your command");
@@ -38,7 +43,7 @@ namespace ToyRobot
                                 int x = Convert.ToInt32(parameters.Split(new char[] { ',' }, 3)[0]);
                                 int y = Convert.ToInt32(parameters.Split(new char[] { ',' }, 3)[1]);
                                 var direction = parameters.Split(new char[] { ',' }, 3)[2];
-                                placeRobot(x, y, direction);
+                                PlaceRobot(x, y, direction);
                             }
                             else
                             {
@@ -47,19 +52,19 @@ namespace ToyRobot
                         }                        
                         break;
                     case "MOVE":
-                        moveRobot();
+                        MoveRobot();
                         break;
                     case "LEFT":
-                        rotateRobotLeft();
+                        RotateRobotLeft();
                         break;
                     case "RIGHT":
-                        rotateRobotRight();
+                        RotateRobotRight();
                         break;
                     case "REPORT":
-                        report();
+                        Report();
                         break;
                     case "HELP":
-                        printHelp();
+                        PrintHelp();
                         break;
                     case "EXIT":
                         exitNextLoop = true;
@@ -76,19 +81,23 @@ namespace ToyRobot
 
         // If there is no robot on the table this places the robot at the specified position facing the specified direction. 
         // If there is already a robot on the table this changes the robots position and facing direction to those specified.
-        private static bool placeRobot(int x, int y, string direction)
+        public static bool PlaceRobot(int x, int y, string direction)
         {
             if(robot == null)
             {
                 robot = new Robot();
             }
 
-            robot.Place(x, y, direction);
+            if (!robot.Place(x, y, direction))
+            {
+                robot = null;
+                Console.WriteLine("Robot can only be placed with x and y coordinates between 0-4.");
+            }
             return true;
         }
 
         // Attempts to move the robot based on its current facing position and gives the appropriate message if not able to.
-        private static bool moveRobot()
+        public static bool MoveRobot()
         {
             if (robot == null)
             {
@@ -106,7 +115,7 @@ namespace ToyRobot
         }
 
         // Attempts to rotate the robot left and gives the appropriate message if not able to.
-        private static bool rotateRobotLeft()
+        public static bool RotateRobotLeft()
         {
             if (robot == null)
             {
@@ -118,7 +127,7 @@ namespace ToyRobot
         }
 
         // Attempts to rotate the robot right and gives the appropriate message if not able to.
-        private static bool rotateRobotRight()
+        public static bool RotateRobotRight()
         {
             if (robot == null)
             {
@@ -130,7 +139,7 @@ namespace ToyRobot
         }
 
         // Attempts to generate and display a report showing the robots current x and y positions and it's facing direction in the following format "x,y,direction" and gives the appropriate message if not able to. 
-        private static bool report()
+        public static bool Report()
         {
             if (robot == null)
             {
@@ -143,7 +152,7 @@ namespace ToyRobot
         }
 
         // This method just prints some instructions of valid commands for the user's reference.
-        private static void printHelp()
+        public static void PrintHelp()
         {
             Console.WriteLine("The following are valid commands: ");
             Console.WriteLine("PLACE x,y,DIRECTION - places the robot on the table at the specified location and facing the specified direction (eg. PLACE 1,2,NORTH).");
@@ -162,11 +171,14 @@ namespace ToyRobot
         // The following code checks to ensure we have received valid input and if not returns false. 
         private static bool validatePLACEParameters(string parameters)
         {
+            // Regex checks for an int followed by a comma, followed by another int and comma and then something else. Returns false if doesn't match. 
             bool isOK = Regex.IsMatch(parameters, @"[0-9]\,[0-9]\,");
             if (!isOK)
             {
                 return false;
             }
+
+            // Checks that the integers input are valid numbers and that the direction is a valid direction. Returns false if any fail.
             int n;
             var xisNumeric = int.TryParse(parameters.Split(new char[] { ',' }, 3)[0], out n);
             int z;
@@ -178,6 +190,7 @@ namespace ToyRobot
                 return false;
             }
 
+            // If all of the above pass then return true.
             return true;
         }
 
