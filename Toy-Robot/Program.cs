@@ -1,16 +1,72 @@
-// A Hello World! program in C#.
 using System;
-namespace HelloWorld
+namespace ToyRobot
 {
-    class Hello
+    class Program
     {
+        public static Robot robot;
+        private static bool exitNextLoop = false;
+
         static void Main()
         {
-            Console.WriteLine("Hello World!");
+            while (!exitNextLoop)
+            {
+                Console.WriteLine("Type your command");
 
-            // Keep the console window open in debug mode.
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
+                var input = Console.ReadLine();
+
+                // Takes the first word in the input (eg. the characters up to the first space)
+                var command = input.Split(new char[] { ' ' }, 2)[0];
+
+                // Code for each command has been seperated into methods for readability purposes
+                switch (command)
+                {
+                    case "PLACE":
+                        // Gets the x, y and directional input from the input string and stores them in individual variables
+                        var parameters = input.Split(new char[] { ' ' }, 2)[1];
+                        int x = Convert.ToInt32(parameters.Split(new char[] { ',' }, 3)[0]);
+                        int y = Convert.ToInt32(parameters.Split(new char[] { ',' }, 3)[1]);
+                        var directionString = parameters.Split(new char[] { ',' }, 3)[2];
+                        placeRobot(x, y, convertStringToDirection(directionString));
+                        break;
+                    case "EXIT":
+                        exitNextLoop = true;
+                        break;
+                    default:
+                        //TODO: Error 
+                        break;
+                }
+            }
+            
+        }
+
+        private static bool placeRobot(int x, int y, Robot.Direction direction)
+        {
+            if(robot == null)
+            {
+                robot = new Robot();
+            }
+
+            robot.Place(x, y, direction);
+            return true;
+        }
+
+        private static Robot.Direction convertStringToDirection(string directionString)
+        {
+            switch (directionString)
+            {
+                case "NORTH":
+                    return Robot.Direction.NORTH;
+                case "EAST":
+                    return Robot.Direction.EAST;
+                case "SOUTH":
+                    return Robot.Direction.SOUTH;
+                case "WEST":
+                    return Robot.Direction.WEST;
+                default:
+                    //TODO: Error
+                    return Robot.Direction.NORTH;
+                    //break;
+            }
         }
     }
 }
