@@ -5,13 +5,13 @@ namespace ToyRobot
     {
         private int xPos; // valid x coordinate positions are 0 - 5
         private int yPos; // valid y coordinate positions are 0 - 5
-        private Direction direction;
+        private string direction;
 
         public Robot()
         {
         }
 
-        public bool Place(int x, int y, Direction facing)
+        public bool Place(int x, int y, string facing)
         {
             if (x < 0 || x > 5 || y < 0 || y > 5)
                 return false;
@@ -23,36 +23,13 @@ namespace ToyRobot
             return true;
         }
 
-        public Report Report()
+        public string Report()
         {
-            return new Report(xPos, yPos, direction);
+            return xPos + "," + yPos + "," + direction;
         }
 
-        public enum Direction
-        {
-            NORTH,
-            EAST,
-            SOUTH,
-            WEST
-        }
-
-        
     }
 
-    // Report is a helper class to make it easier to pass back the values of x position, y position and direction when the Report method is called.
-    public class Report
-    {
-        private int xPos; // valid x coordinate positions are 0 - 5
-        private int yPos; // valid y coordinate positions are 0 - 5
-        private Robot.Direction direction;
-
-        public Report(int x, int y, Robot.Direction facing)
-        {
-            xPos = x;
-            yPos = y;
-            direction = facing;
-        }
-    }
 }
 
 

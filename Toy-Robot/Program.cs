@@ -25,8 +25,11 @@ namespace ToyRobot
                         var parameters = input.Split(new char[] { ' ' }, 2)[1];
                         int x = Convert.ToInt32(parameters.Split(new char[] { ',' }, 3)[0]);
                         int y = Convert.ToInt32(parameters.Split(new char[] { ',' }, 3)[1]);
-                        var directionString = parameters.Split(new char[] { ',' }, 3)[2];
-                        placeRobot(x, y, convertStringToDirection(directionString));
+                        var direction = parameters.Split(new char[] { ',' }, 3)[2];
+                        placeRobot(x, y, direction);
+                        break;
+                    case "REPORT":
+                        report();
                         break;
                     case "EXIT":
                         exitNextLoop = true;
@@ -39,7 +42,7 @@ namespace ToyRobot
             
         }
 
-        private static bool placeRobot(int x, int y, Robot.Direction direction)
+        private static bool placeRobot(int x, int y, string direction)
         {
             if(robot == null)
             {
@@ -50,23 +53,17 @@ namespace ToyRobot
             return true;
         }
 
-        private static Robot.Direction convertStringToDirection(string directionString)
+        private static bool report()
         {
-            switch (directionString)
+            if (robot == null)
             {
-                case "NORTH":
-                    return Robot.Direction.NORTH;
-                case "EAST":
-                    return Robot.Direction.EAST;
-                case "SOUTH":
-                    return Robot.Direction.SOUTH;
-                case "WEST":
-                    return Robot.Direction.WEST;
-                default:
-                    //TODO: Error
-                    return Robot.Direction.NORTH;
-                    //break;
+                return false;
             }
+
+            Console.WriteLine(robot.Report());
+            return true;
         }
+
+       
     }
 }
